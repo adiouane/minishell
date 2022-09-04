@@ -6,7 +6,7 @@
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 15:09:42 by adiouane          #+#    #+#             */
-/*   Updated: 2022/08/17 22:40:46 by omanar           ###   ########.fr       */
+/*   Updated: 2022/09/01 06:09:07 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	is_flag(char **args)
 	return (0);
 }
 
-void	echo(void)
+void	ft_echo(void)
 {
 	int	i;
 

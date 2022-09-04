@@ -6,7 +6,7 @@
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 17:39:40 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/22 02:38:41 by omanar           ###   ########.fr       */
+/*   Updated: 2022/08/30 18:02:54 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	remove_env(char *str)
 	while (g_data.env[++i])
 	{
 		tmp = get_variable_name(g_data.env[i]);
-		if (!ft_strncmp(tmp, str, ft_strlen(tmp)))
+		if (!ft_strncmp(tmp, str, big_len(ft_strlen(tmp), ft_strlen(str))))
 		{
 			g_data.env = ft_remove_element(g_data.env, i--);
 			free(tmp);
@@ -66,7 +66,8 @@ void	remove_export(char *str)
 	{
 		tmp = get_new_line(str, NULL);
 		if (!ft_strncmp(g_data.export[i], tmp,
-				get_index(g_data.export[i], '=')))
+				big_len(get_index(g_data.export[i], '='),
+					get_index(tmp, '='))))
 		{
 			g_data.export = ft_remove_element(g_data.export, i--);
 			free(tmp);

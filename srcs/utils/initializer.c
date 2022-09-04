@@ -6,19 +6,26 @@
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 14:55:31 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/29 15:42:36 by omanar           ###   ########.fr       */
+/*   Updated: 2022/09/01 06:12:23 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
+
+void	initialization(char **env)
+{
+	g_data.exit_status = 0;
+	g_data.newpwd = ft_calloc(1, sizeof(char));
+	creat_env(env);
+	creat_export(g_data.env);
+	signal_init();
+}
 
 void	creat_env(char **env)
 {
 	int		i;
 
 	i = -1;
-	g_data.exit_status = 0;
-	g_data.newpwd = ft_calloc(1, sizeof(char));
 	g_data.env = (char **)malloc(sizeof(char *));
 	g_data.env[0] = NULL;
 	while (env[++i])
@@ -68,12 +75,9 @@ void	cmd_init(void)
 void	data_init(void)
 {
 	g_data.stop = 0;
-	g_data.error = 0;
 	g_data.dollar = 0;
 	g_data.signalchild = 0;
 	g_data.breaker = 0;
 	g_data.signal_heredoc = 0;
-	g_data.status = 0;
-	g_data.fialdfork = 0;
 	cmd_init();
 }

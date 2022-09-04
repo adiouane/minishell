@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/31 21:46:57 by adiouane          #+#    #+#             */
-/*   Updated: 2022/08/29 03:29:06 by adiouane         ###   ########.fr       */
+/*   Created: 2022/08/31 23:24:36 by adiouane          #+#    #+#             */
+/*   Updated: 2022/09/01 06:09:00 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	ft_builtins_in_child(void)
 	else if (ft_strncmp(cmd->args[0], "cd", 2) == 0)
 		cd();
 	else if (ft_strncmp(cmd->args[0], "echo", 4) == 0)
-		echo();
+		ft_echo();
 	else if (ft_strncmp(cmd->args[0], "exit", 4) == 0)
 		exit_cmd();
 	else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)
@@ -71,6 +71,14 @@ int	stop(void)
 		ft_lstdelone(tmp, &free_cmd);
 		return (1);
 	}
+	if (((t_cmd *)g_data.cmds->content)->error)
+	{
+		error_infile();
+		tmp = g_data.cmds;
+		g_data.cmds = g_data.cmds->next;
+		ft_lstdelone(tmp, &free_cmd);
+		return (1);
+	}
 	return (0);
 }
 
@@ -91,7 +99,7 @@ void	ft_builtins(void)
 	else if (ft_strncmp(cmd->args[0], "cd", 2) == 0)
 		cd();
 	else if (ft_strncmp(cmd->args[0], "echo", 4) == 0)
-		echo();
+		ft_echo();
 	else if (ft_strncmp(cmd->args[0], "exit", 4) == 0)
 		exit_cmd();
 	else if (ft_strncmp(cmd->args[0], "unset", 5) == 0)

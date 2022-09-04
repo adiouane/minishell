@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens_utils2.c                                    :+:      :+:    :+:   */
+/*   parser_utils4.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/29 17:43:19 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/29 17:44:05 by omanar           ###   ########.fr       */
+/*   Updated: 2022/09/04 15:46:58 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,9 @@ char	*get_list(void)
 	}
 	closedir(dir);
 	i = 0;
-	while (tmp[i + 1])
-		g_data.cmd->args = advanced_add(g_data.cmd->args, tmp[i++]);
+	if (tmp[i])
+		while (tmp[i + 1])
+			g_data.cmd->args = advanced_add(g_data.cmd->args, tmp[i++]);
 	new = ft_strdup(tmp[i]);
 	free_loop(tmp);
 	return (new);

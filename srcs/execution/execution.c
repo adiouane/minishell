@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/29 19:54:55 by adiouane          #+#    #+#             */
-/*   Updated: 2022/08/29 03:28:45 by adiouane         ###   ########.fr       */
+/*   Updated: 2022/08/30 17:19:03 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	piping(void)
 {
 	pipe(g_data.p);
+	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 	g_data.signalchild = 1;
 }
@@ -45,7 +46,7 @@ void	run_execution(void)
 			i++;
 		}
 	}
-	waiting(i, g_data.status, g_data.pid);
+	waiting(i, g_data.pid);
 }
 
 void	execution(void)

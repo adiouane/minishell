@@ -6,26 +6,11 @@
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/13 17:34:41 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/29 17:04:19 by omanar           ###   ########.fr       */
+/*   Updated: 2022/09/01 06:12:46 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-void	initialization(char **env)
-{
-	creat_env(env);
-	creat_export(g_data.env);
-	init_signal();
-}
-
-void	last_touch(void)
-{
-	ft_putstr_fd("exit\n", 1);
-	free_loop(g_data.env);
-	free_loop(g_data.export);
-	exit (g_data.exit_status);
-}
 
 int	main(int ac, char **av, char **env)
 {
@@ -51,6 +36,6 @@ int	main(int ac, char **av, char **env)
 		execution();
 		free(line);
 	}
-	last_touch();
+	cleaning();
 	return (0);
 }

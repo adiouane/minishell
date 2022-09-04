@@ -5,81 +5,68 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/27 18:16:47 by adiouane          #+#    #+#             */
-/*   Updated: 2022/08/29 17:00:41 by omanar           ###   ########.fr       */
+/*   Created: 2022/08/27 18:16:26 by adiouane          #+#    #+#             */
+/*   Updated: 2022/09/01 15:57:58 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
 
-void	*ft_getenv(char *str)
+void	failed_fork(void)
 {
-	int	i;
+	ft_putstr_fd("minishell: ", 2);
+	perror("fork");
+	g_data.exit_status = 1;
+}
+
+void	waiting(int i, pid_t pid)
+{
+	int	status;
 
 	i = 0;
-	if (!g_data.env)
-		return (NULL);
-	while (g_data.env[i] != NULL)
+	while (i < g_data.cmds_size)
 	{
-		if (ft_strncmp(g_data.env[i], str, ft_strlen(str)) == 0)
-			return (g_data.env[i] + ft_strlen(str));
+		waitpid(pid, &status, 0);
+		if (pid != -1)
+		{
+			if (WIFEXITED(status))
+				g_data.exit_status = WEXITSTATUS(status);
+			if (WIFSIGNALED(status))
+				g_data.exit_status = 128 + WTERMSIG(status);
+		}
+		while (wait(NULL) != -1)
+			;
 		i++;
 	}
-	return (NULL);
+	signal_init();
 }
 
-void	open_outputs(void)
+void	next_cmd(int last_fd)
 {
-	int	j;
+	t_list	*tmp;
 
-	j = -1;
-	while (((t_cmd *)(g_data.cmds->content))->outfiles[++j])
+	close(g_data.p[1]);
+	tmp = g_data.cmds;
+	g_data.cmds = g_data.cmds->next;
+	ft_lstdelone(tmp, &free_cmd);
+	if (last_fd != -1)
+		close(last_fd);
+}
+
+void	redirect_input(void)
+{
+	if (((t_cmd *)(g_data.cmds->content))->input != 0)
 	{
-		if (((t_cmd *)(g_data.cmds->content))->append[j])
-			((t_cmd *)(g_data.cmds->content))->output
-				= open(((t_cmd *)(g_data.cmds->content))->outfiles[j],
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			((t_cmd *)(g_data.cmds->content))->output
-				= open(((t_cmd *)(g_data.cmds->content))->outfiles[j],
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (((t_cmd *)(g_data.cmds->content))->output == -1)
-		{
-			g_data.exit_status = 1;
-			error_msg(((t_cmd *)(g_data.cmds->content))->outfiles[j], errno);
-			g_data.stop = 1;
-			return ;
-		}
+		dup2(((t_cmd *)(g_data.cmds->content))->input, 0);
+		close(((t_cmd *)(g_data.cmds->content))->input);
 	}
 }
 
-void	ft_dup(int olfd, int nfd)
+void	redirect_output(void)
 {
-	dup2(olfd, nfd);
-	close(olfd);
-}
-
-void	ft_child_process(t_cmd *cmd, int i, int last_fd)
-{
-	g_data.signalqiut = 1;
-	g_data.signalchild = 1;
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	open_outputs();
-	if (g_data.stop == 1)
-		exit(g_data.exit_status);
-	close(g_data.p[0]);
-	if (cmd->error)
-		error_infile();
-	if (i != g_data.cmds_size - 1)
-		ft_dup(g_data.p[1], 1);
 	if (((t_cmd *)(g_data.cmds->content))->output != 1)
-		ft_dup(((t_cmd *)(g_data.cmds->content))->output, 1);
-	if (last_fd != -1)
-		ft_dup(last_fd, 0);
-	if (((t_cmd *)(g_data.cmds->content))->input != 0)
-		ft_dup(((t_cmd *)(g_data.cmds->content))->input, 0);
-	if (!((t_cmd *)(g_data.cmds->content))->args[0])
-		exit(EXIT_SUCCESS);
-	run_cmd(cmd);
+	{
+		dup2(((t_cmd *)(g_data.cmds->content))->output, 1);
+		close(((t_cmd *)(g_data.cmds->content))->output);
+	}
 }

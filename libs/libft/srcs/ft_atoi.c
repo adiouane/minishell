@@ -3,48 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/03 17:11:44 by omanar            #+#    #+#             */
-/*   Updated: 2022/06/27 17:21:26 by omanar           ###   ########.fr       */
+/*   Updated: 2022/08/31 23:03:43 by adiouane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <libft.h>
 
-static int	ft_checklong(int res, int count, int is_neg)
+unsigned long long	ft_loop(const char *str, int i, int is_neg)
 {
-	if (count > 19)
-	{
-		if (is_neg == -1)
-			return (0);
-		else if (is_neg == 1)
-			return (-1);
-	}
-	return (res * is_neg);
-}
-
-static int	ft_loop(const char *str, int i, int count, int is_neg)
-{
-	int	p;
-	int	res;
+	unsigned long long	res;
 
 	res = 0;
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		res = (res * 10) + (str[i++] - '0');
-		count++;
+		if (res > 9223372036854775807)
+			return (0);
 	}
-	p = ft_checklong(res, count, is_neg);
-	return (p);
+	return (res * is_neg);
 }
 
-int	ft_atoi(const char *str)
+unsigned long long	ft_atoi(const char *str)
 {
-	int	i;
-	int	is_neg;
-	int	count;
-	int	p;
+	int					i;
+	int					is_neg;
+	unsigned long long	p;
 
 	is_neg = 1;
 	i = 0;
@@ -55,7 +41,6 @@ int	ft_atoi(const char *str)
 		is_neg = -1;
 	if (is_neg == -1 || str[i] == '+')
 		i++;
-	count = 0;
-	p = ft_loop(str, i, count, is_neg);
+	p = ft_loop(str, i, is_neg);
 	return (p);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 14:42:13 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/23 18:45:14 by adiouane         ###   ########.fr       */
+/*   Updated: 2022/09/01 06:17:09 by omanar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,12 @@ void	clean(void)
 	}
 	else
 		free_cmd(g_data.cmd);
+}
+
+void	cleaning(void)
+{
+	ft_putstr_fd("exit\n", 1);
+	free_loop(g_data.env);
+	free_loop(g_data.export);
+	exit (g_data.exit_status);
 }

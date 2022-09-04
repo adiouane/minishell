@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/26 15:00:01 by omanar            #+#    #+#             */
-/*   Updated: 2022/08/20 00:35:11 by omanar           ###   ########.fr       */
+/*   Updated: 2022/08/31 21:36:48 by adiouane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,18 @@ char	*handle_spaces(char *value, char **new)
 	char	**strs;
 
 	strs = ft_split(value, ' ');
-	i = -1;
-	*new = advanced_join(*new, strs[++i]);
+	if (!strs[0])
+	{
+		free_loop(strs);
+		free(value);
+		return (NULL);
+	}
+	i = 0;
+	*new = advanced_join(*new, strs[i++]);
 	g_data.cmd->args = advanced_add(g_data.cmd->args, *new);
-	while (strs[++i])
-		g_data.cmd->args = advanced_add(g_data.cmd->args, strs[i]);
+	if (strs[i])
+		while (strs[i + 1])
+			g_data.cmd->args = advanced_add(g_data.cmd->args, strs[i++]);
 	tmp = ft_strdup(strs[i]);
 	free(*new);
 	*new = ft_calloc(1, sizeof(char));

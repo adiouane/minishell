@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: omanar <omanar@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: adiouane <adiouane@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/11 23:15:08 by adiouane          #+#    #+#             */
-/*   Updated: 2022/08/29 16:03:14 by omanar           ###   ########.fr       */
+/*   Updated: 2022/08/31 21:49:36 by adiouane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minishell.h>
-
-void	free_path(char **paths)
-{
-	int	i;
-
-	i = 0;
-	while (paths[i])
-	{
-		free(paths[i]);
-		i++;
-	}
-	free(paths);
-}
 
 void	*check_cmd(char **path, char *cmd)
 {
@@ -47,6 +34,21 @@ void	*check_cmd(char **path, char *cmd)
 	return (NULL);
 }
 
+void	ft_isaccess(char *cmd1)
+{
+	t_cmd	*cmd;
+
+	cmd = (t_cmd *)(g_data.cmds->content);
+	if (access(cmd1, X_OK) == 0)
+	{
+		if (execve(cmd1, g_data.cmd->args, g_data.env) == -1)
+		{
+			g_data.exit_status = 127;
+			exit_strerr(cmd->args[0], errno, g_data.exit_status);
+		}
+	}
+}
+
 char	**get_path(char **env)
 {
 	int	i;
@@ -58,6 +60,7 @@ char	**get_path(char **env)
 		i++;
 	if (!env[i])
 	{
+		ft_isaccess(((t_cmd *)(g_data.cmds->content))->args[0]);
 		g_data.exit_status = 127;
 		ft_putstr_fd("minishell: ", 1);
 		ft_putstr_fd(((t_cmd *)(g_data.cmds->content))->args[0], 2);
@@ -101,13 +104,13 @@ void	run_cmd(t_cmd *cmd)
 	if (!cmd->cmd || !cmd->args[0][0])
 	{
 		g_data.exit_status = 127;
-		free_path(cmd->paths);
+		free_loop(cmd->paths);
 		error_command_not_found("minishell:", cmd->args[0], g_data.exit_status);
 	}
 	else if (execve(cmd->cmd, cmd->args, g_data.env) == -1)
 	{
 		g_data.exit_status = 127;
-		free_path(cmd->paths);
+		free_loop(cmd->paths);
 		exit_strerr(cmd->args[0], errno, g_data.exit_status);
 	}
 }
